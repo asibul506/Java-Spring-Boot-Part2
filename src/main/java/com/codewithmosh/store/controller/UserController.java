@@ -18,12 +18,7 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping()
-    public Iterable<UserDto> getAllUsers(
-            @RequestHeader (value = "X-Auth-token", required = false) String authToken,
-            @RequestParam(required = false, defaultValue = "", name = "sort") String sortBy
-    ) {
-
-        System.out.println("Auth User: " + authToken); // just to show how to read headers
+    public Iterable<UserDto> getAllUsers(@RequestParam(required = false, defaultValue = "", name = "sort") String sortBy) {
 
         if(!Set.of("name", "email").contains(sortBy))
             sortBy ="name";// validate sort parameter
@@ -43,6 +38,11 @@ public class UserController {
 
         return ResponseEntity.ok(userMapper.toDto(user));
 
+    }
+
+    @PostMapping()
+    public UserDto createUser(@RequestBody UserDto userData) {
+        return userData; //example implementation of request body handling.
     }
 
 }
