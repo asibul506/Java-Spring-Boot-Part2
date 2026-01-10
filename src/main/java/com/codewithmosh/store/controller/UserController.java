@@ -27,7 +27,6 @@ public class UserController {
                 .stream()
                 .map(userMapper::toDto)
                 .toList();
-
     }
 
     @GetMapping("/{id}")
