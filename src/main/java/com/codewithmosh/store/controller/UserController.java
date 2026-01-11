@@ -107,19 +107,5 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    // Exception handler for validation errors in request bodies. this method will be invoked automatically when a MethodArgumentNotValidException is thrown.
-    @ExceptionHandler(MethodArgumentNotValidException.class) // Specify the exception type to handle
-    public ResponseEntity<Map<String, String>> handleValidationErrors(
-        MethodArgumentNotValidException exception
-    ){
-        var errors= new HashMap<String, String>();
-
-        exception.getBindingResult().getFieldErrors().forEach(error ->
-            errors.put(error.getField(), error.getDefaultMessage())
-        ); // Extract field errors and put them into the map
-
-        return ResponseEntity.badRequest().body(errors);
-    }
-
 
 }
