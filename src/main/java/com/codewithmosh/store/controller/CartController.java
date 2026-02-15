@@ -32,40 +32,34 @@ public class CartController {
 
         var cartDto = cartMapper.toDto(cart);
 
-        var uri= uriBuilder.path("/carts/{id}").buildAndExpand(cartDto.getId()).toUri();
+        var uri = uriBuilder.path("/carts/{id}").buildAndExpand(cartDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(cartDto);
     }
 
     @PostMapping("/{cartId}/items")
-    public ResponseEntity<CartItemDto> addToCart(
-            @PathVariable UUID cartId,
-            @Valid @RequestBody AddToCartRequest request) {
+    public ResponseEntity<CartItemDto> addToCart(@PathVariable UUID cartId, @Valid @RequestBody AddToCartRequest request) {
 
-        var cart = cartRepository.findById(cartId).orElse(null);
-        if(cart == null)  {
+        var cart = cartRepository.getCartWithItems(cartId).orElse(null);
+        if (cart == null) {
             return ResponseEntity.notFound().build();
         }
 
         var product = productRepository.findById(request.getProductId()).orElse(null);
-        if(product == null){
+        if (product == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        var cartItem= cart.getCartItems()
-                .stream()
-                .filter(item->item.getProduct().getId().equals(product.getId()))
-                .findFirst()
-                .orElse(null);
+        var cartItem = cart.getItems().stream().filter(item -> item.getProduct().getId().equals(product.getId())).findFirst().orElse(null);
 
-        if(cartItem != null){
+        if (cartItem != null) {
             cartItem.setQuantity(cartItem.getQuantity() + 1);
         } else {
             cartItem = new CartItem();
             cartItem.setProduct(product);
             cartItem.setQuantity(1);
             cartItem.setCart(cart);
-            cart.getCartItems().add(cartItem);
+            cart.getItems().add(cartItem);
         }
 
         cartRepository.save(cart);
@@ -76,6 +70,15 @@ public class CartController {
 
     }
 
+    @GetMapping("/{cartId}")
+    public ResponseEntity<CartDto> getCart(@PathVariable UUID cartId) {
+        var cart = cartRepository.getCartWithItems(cartId).orElse(null);
+        if (cart == null) {
+            return ResponseEntity.notFound().build();
+        }
+        var cartDto = cartMapper.toDto(cart);
+        return ResponseEntity.ok(cartDto);
+    }
 
 
 }
