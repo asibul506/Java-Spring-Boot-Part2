@@ -6,9 +6,6 @@ import com.codewithmosh.store.dtos.CartItemDto;
 import com.codewithmosh.store.dtos.UpdateCartItemRequest;
 import com.codewithmosh.store.exceptions.CartNotFoundException;
 import com.codewithmosh.store.exceptions.ProductNotFoundException;
-import com.codewithmosh.store.mappers.CartMapper;
-import com.codewithmosh.store.repositories.CartRepository;
-import com.codewithmosh.store.repositories.ProductRepository;
 import com.codewithmosh.store.services.CartServices;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,9 +21,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/carts")
 public class CartController {
-    private final CartRepository cartRepository;
-    private final CartMapper cartMapper;
-    private final ProductRepository productRepository;
     private CartServices cartServices;
 
     @PostMapping
