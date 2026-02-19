@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(c-> c
                         .requestMatchers("/carts/**").permitAll() // Allow unauthenticated access to cart endpoints
+                        .requestMatchers("/auth/login").permitAll() // Allow unauthenticated access to authentication endpoints
                         .requestMatchers(HttpMethod.POST, "/users").permitAll() // Allow unauthenticated access to user registration endpoint for post requests
                         .anyRequest().authenticated() // Require authentication for all other endpoints. This line has to be after the cart matcher, otherwise it will override it and require authentication for cart endpoints as well.
                 );
